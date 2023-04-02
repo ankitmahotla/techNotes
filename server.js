@@ -3,8 +3,16 @@ const app = express();
 const path = require("path");
 const PORT = process.env.PORT || 3500;
 
-app.use("/", express.static(path.join(__dirname, "/public")));
+// Allows app to Recieve and parse JSON data (Built in middleware)
+app.use(express.json());
+
+// Serves static files like images and css files (Built in middleware)
+app.use("/", express.static(path.join(__dirname, "public")));
+
+// Serves html pages using express.Router()
 app.use("/", require("./routes/root"));
+
+// Catch all route to display 404 Error Page when the user reaches a page that doesnt exists
 app.all("*", (req, res) => {
   res.status(404);
   if (req.accepts("html")) {
@@ -16,4 +24,5 @@ app.all("*", (req, res) => {
   }
 });
 
+// Used to start the server.
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
